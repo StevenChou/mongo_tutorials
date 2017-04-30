@@ -1,16 +1,23 @@
 // node import lib
 const mongoose = require('mongoose');
 
-// users_test is a target database
-mongoose.connect('mongodb://localhost/users_test');
+// 使用 ES6 實作的 Promise
+mongoose.Promise = global.Promise;
 
-// once and on are event handlers
-// watch open event and error event
-mongoose.connection
-    .once('open',  () => console.log('Good to go!'))
-    .on('error', (error) => {
-        console.warn('Warning', error);
-    });
+// 在測試過程中，只會執行一次
+before((done) => {
+    // users_test is a target database
+    mongoose.connect('mongodb://localhost/users_test');
+
+    // once and on are event handlers
+    // watch open event and error event
+    mongoose.connection
+        .once('open',  () => { done(); })
+        .on('error', (error) => {
+            console.warn('Warning', error);
+        });
+});
+
 
 // 會在所有測試任務之前執行
 beforeEach((done) => {
