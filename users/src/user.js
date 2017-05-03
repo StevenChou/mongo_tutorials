@@ -1,7 +1,9 @@
 // user model
 
 const mongoose = require('mongoose');
+const PostSchema = require('./post');
 const Schema = mongoose.Schema;
+
 
 const UserSchema = new Schema({
     name: {
@@ -12,7 +14,8 @@ const UserSchema = new Schema({
         },
         required: [true, 'Name is required.']
     },
-    postCount: Number
+    postCount: Number,
+    posts: [PostSchema]
 });
 
 // create user model
