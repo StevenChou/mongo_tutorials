@@ -14,8 +14,16 @@ const UserSchema = new Schema({
         },
         required: [true, 'Name is required.']
     },
-    postCount: Number,
-    posts: [PostSchema]
+    // postCount: Number,
+    posts: [PostSchema],
+    likes: Number
+});
+
+// 建立虛擬型別 *當使用 steven.postCount 就好 call 這個 function
+// 如果使用 arrow function ===> this 參考到 這個 file
+UserSchema.virtual('postCount').get(function() {
+    // this 參考到 current instance model
+    return this.posts.length;
 });
 
 // create user model

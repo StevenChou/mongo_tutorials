@@ -5,7 +5,7 @@ describe('Updating records', () => {
     let steven;
 
     beforeEach((done) => {
-        steven = new User({ name: 'Steven', postCount: 0 });
+        steven = new User({ name: 'Steven', likes: 0 });
         steven.save()
             .then(() => done());
     });
@@ -54,10 +54,10 @@ describe('Updating records', () => {
     
     it('A user can have their postcount incremented by 1', (done) => {
         // db 自動將屬性依指定值增加或減少
-        User.update({ name: 'Steven' }, { $inc: { postCount: 1 }})
+        User.update({ name: 'Steven' }, { $inc: { likes: 1 }})
             .then(() => User.findOne({ name: 'Steven' }))
             .then((user) => {
-                assert(user.postCount === 1);
+                assert(user.likes === 1);
                 done();
             });
     });
