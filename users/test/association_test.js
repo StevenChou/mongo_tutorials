@@ -24,14 +24,45 @@ describe('Association', () => {
             .then(() => done());
     });
 
-    // mocha 只執行這一個測試程式
-    it.only('saves a relation between a user and a blogpost', (done) => {
+    
+    it('saves a relation between a user and a blogpost', (done) => {
         User.findOne({ name: 'Steven' })
             .populate('blogPosts')
             .then((user) => {
+                // 只載入一層相依關聯
                 // console.log('user obj:', user);
                 // console.log('user -> blogPosts[0]:', user.blogPosts[0]);
                 assert(user.blogPosts[0].title === 'JS is Great');
+                done();
+            });
+    });
+
+    it('saves a full relation graph', (done) => {
+        User.findOne({ name: 'Steven' })
+            .populate({
+                path: 'blogPosts',
+                populate: {
+                    path: 'comments',
+                    // 指定載入的 model
+                    model: 'comment',
+                    populate: {
+                        path: 'user',
+                        // 指定載入的 model
+                        model: 'user'
+                    }
+                }
+            })
+            .then((user) => {
+                // console.log('user obj:', user);
+                // console.log('user -> blogPosts[0]:', user.blogPosts[0]);
+                // console.log('user -> blogPosts[0] -> comments[0]:',
+                //         user.blogPosts[0].comments[0]);
+
+                assert(user.name === 'Steven');
+                assert(user.blogPosts[0].title === 'JS is Great');
+                assert(user.blogPosts[0].comments[0].content === 'Congrats on great post');
+                assert(user.blogPosts[0].comments[0].user.name === 'Steven');
+
                 done();
             });
     });
