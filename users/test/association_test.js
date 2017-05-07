@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const assert = require('assert');
 const User = require('../src/user');
 const BlogPost = require('../src/blogPost');
 const Comment = require('../src/comment');
@@ -26,8 +27,11 @@ describe('Association', () => {
     // mocha 只執行這一個測試程式
     it.only('saves a relation between a user and a blogpost', (done) => {
         User.findOne({ name: 'Steven' })
+            .populate('blogPosts')
             .then((user) => {
-                console.log(user);
+                // console.log('user obj:', user);
+                // console.log('user -> blogPosts[0]:', user.blogPosts[0]);
+                assert(user.blogPosts[0].title === 'JS is Great');
                 done();
             });
     });
