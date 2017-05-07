@@ -21,9 +21,15 @@ before((done) => {
 
 // 會在所有測試任務之前執行
 beforeEach((done) => {
-    // 在執行測試前，將 users collection drop 掉 
-    mongoose.connection.collections.users.drop(() => {
-        // 告訴 mocha 可以開始執行測試任務了(呼叫 done callback)
-        done();
+    // 對應到 mongoDB 裡的 collections[ES6]
+    // mongoDB 內的 collections 命名都是小寫的
+    const { users, blogposts, comments } = mongoose.connection.collections;
+    users.drop(() => {
+        blogposts.drop(() => {
+            comments.drop(() => {
+                // 告訴 mocha 可以開始執行後續的測試任務了(呼叫 done callback)
+                done();
+            });
+        });
     });
 });
