@@ -31,6 +31,18 @@ UserSchema.virtual('postCount').get(function() {
     return this.posts.length;
 });
 
+// [mongoose middleware]
+// 在執行 save event 前，
+UserSchema.pre('remove', function(next) {
+    const BlogPost = mongoose.model('blogPost');
+
+    // this 參考到 current instance model
+    // like _id in('', '',...)
+    // 使用 next() 呼叫下一個 middleware
+    BlogPost.remove({ _id: { $in: this.blogPosts }})
+        .then(() => next());
+});
+
 // create user model
 // 如果 database 沒有 user collection，會自行建立
 // 說明：將 UserSchema 對應到 user collection
