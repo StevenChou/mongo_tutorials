@@ -32,7 +32,7 @@ UserSchema.virtual('postCount').get(function() {
 });
 
 // [mongoose middleware]
-// 在執行 save event 前，
+// 在執行 remove event 前，
 UserSchema.pre('remove', function(next) {
     const BlogPost = mongoose.model('blogPost');
 
